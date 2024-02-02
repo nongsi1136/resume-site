@@ -41,6 +41,8 @@ router.get("/resumes", async (req, res, next) => {
     },
     orderBy: { [orderKey]: orderValue ? orderValue.toUpperCase() : "DESC" },
   });
+
+  return res.status(200).json({ data: resumes });
 });
 
 //이력서 상세 조회
