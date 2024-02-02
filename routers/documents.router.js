@@ -1,12 +1,12 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../utils/prisma/index.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // 이력서 생성 API
-router.post("/resumes", async (req, res, next) => {
+router.post("/resumes", authMiddleware, async (req, res, next) => {
   const { title, content, status = "APPLY" } = req.body;
   const { userId } = req.user;
   try {
@@ -74,11 +74,14 @@ router.get("/resumes/:userId", async (req, res, next) => {
 });
 
 //이력서 수정 API 비즈니스 로직
-router.post("/resumes/:resumeId", async (req, res, next) => {
+router.patch("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
+  const { userId } = req.user;
+  const { resumeId } = req.params;
+  const { title, content } = req.body;
   // 해당하는 이력서를 조회해야 겠징
   try {
     const resume = await prisma.resumes.findUnique({
-      where: { resumeId: parseInt(userId) },
+      where: { resumeId: parseInt(resumeId) },
     });
     // 다음 이력서가 조회하질 않을 경우 없다고 반환하고
     if (!resume) {
@@ -105,7 +108,7 @@ router.post("/resumes/:resumeId", async (req, res, next) => {
 });
 
 // 이력서 삭제 API
-router.delete("/resumes/:resumeId", async (req, res, next) => {
+router.delete("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
 
   const resume = await prisma.resumes.findById(resumeId).exec();
