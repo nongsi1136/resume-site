@@ -16,7 +16,7 @@ model Users {
   password String @map("password")
   name String @map("name")
 
-  Resumes Resumes[]
+  Resume Resumes[]
   
   @@map("Users")
 }
@@ -26,6 +26,7 @@ model Resumes {
   userId       Int      @map("userId")
   title        String   @map("title")
   content String   @map("content")
+  status String @default("APPlY") @map("status")
   createdAt  DateTime @default(now()) @map("createdAt")
   updatedAt  DateTime @updatedAt @map("updatedAt")
   
