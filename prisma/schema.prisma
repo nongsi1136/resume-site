@@ -34,9 +34,4 @@ model Resumes {
   @@map("Resumes")
 }
 
-model ResumesStatus {
-  statusId Int @id @default(autoincrement()) @map("statusId")
-  status String @map("status")
-}
-
 
