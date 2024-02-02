@@ -94,14 +94,14 @@ router.patch("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
         .json({ message: "해당 이력서를 수정할 권한이 없습니다" });
     }
     // 이력서 수정하기
-    const Updateresume = await prisma.resumes.update({
-      wherte: { userId: parseInt(userId) },
+    const updateResume = await prisma.resumes.update({
+      wherte: { resumeId: parseInt(resumeId) },
       data: {
         title,
         content,
       },
     });
-    return res.status(200).json({ data: Updateresume });
+    return res.status(200).json({ data: updateResume });
   } catch (error) {
     next(error);
   }
