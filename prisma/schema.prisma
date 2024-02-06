@@ -16,9 +16,25 @@ model Users {
   password String @map("password")
   name String @map("name")
 
+  userInfos UserInfos? 
   Resume Resumes[]
   
   @@map("Users")
+}
+
+model UserInfos {
+  userInfoId   Int      @id @default(autoincrement()) @map("userInfoId")
+  userId       Int      @unique @map("userId") // 사용자(Users) 테이블을 참조하는 외래키
+  name         String   @map("name")
+  age          Int?     @map("age")
+  gender       String   @map("gender")
+  profileImage String?  @map("profileImage")
+  createdAt    DateTime @default(now()) @map("createdAt")
+  updatedAt    DateTime @updatedAt @map("updatedAt")
+
+  user Users @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@map("UserInfos")
 }
 
 model Resumes {
