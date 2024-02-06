@@ -3,6 +3,8 @@ import { prisma } from '../utils/prisma/index.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import authMiddleware from '../middlewares/auth.middleware.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const router = express.Router();
 
@@ -88,7 +90,7 @@ router.post('/sign-in', async (req, res, next) => {
       return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
 
     // JWT Access Token 생성
-    const token = jwt.sign({ userId: user.userId }, 'custom-secret-key', {
+    const token = jwt.sign({ userId: user.userId }, tokenSecretKey, {
       expiresIn: '12h',
     });
 
