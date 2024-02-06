@@ -3,7 +3,6 @@ import { prisma } from '../utils/prisma/index.js';
 import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // 이력서 생성 API
 router.post('/resumes', authMiddleware, async (req, res, next) => {
