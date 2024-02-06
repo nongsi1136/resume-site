@@ -7,7 +7,7 @@
 - 그 밖의 사용한 환경변수를 나열해 주세요.
 
 # API 명세서 URL
-- 구글 Docs 공유 URL 추가
+- https://www.notion.so/nongsi/API-11b02b0921be4b36a9e12e37fb91db55?pvs=4
 
 # ERD URL
 - ERD 작성한 위치 URL 추가
