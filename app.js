@@ -4,6 +4,9 @@ import UsersRouter from './routers/users.router.js';
 import DocumentsRouter from './routers/documents.router.js';
 import errorHandlingMiddleware from './middlewares/error-handling.middleware.js';
 import logMiddleware from './middlewares/log.middleware.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = 3316;

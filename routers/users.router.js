@@ -6,6 +6,7 @@ import authMiddleware from '../middlewares/auth.middleware.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const tokenSecretKey = process.env.TOKEN_SECRET;
 const router = express.Router();
 
 // 회원가입 API
