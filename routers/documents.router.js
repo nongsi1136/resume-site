@@ -6,7 +6,7 @@ const router = express.Router();
 
 // 이력서 생성 API
 router.post('/resumes', authMiddleware, async (req, res, next) => {
-  const { title, content, status = 'APPLY' } = req.body;
+  const { title, content } = req.body;
   const { userId } = req.user;
   try {
     const resume = await prisma.resumes.create({
@@ -14,7 +14,7 @@ router.post('/resumes', authMiddleware, async (req, res, next) => {
         userId: +userId,
         title: title,
         content: content,
-        status: { status: 'APPLY' },
+        status: 'APPLY',
       },
     });
     return res.status(201).json({ data: resume });
@@ -27,13 +27,7 @@ router.post('/resumes', authMiddleware, async (req, res, next) => {
 router.get('/resumes', async (req, res, next) => {
   const { orderKey, orderValue } = req.query;
   // 정렬 키와 값의 유효성 검사
-  const vaildOrderKeys = [
-    'resumeId',
-    'title',
-    'content',
-    'createdAt',
-    'status',
-  ];
+  const vaildOrderKeys = ['userId', 'title', 'content', 'createdAt', 'status'];
   const vaildOrderValues = ['asc', 'desc'];
 
   if (
@@ -67,11 +61,11 @@ router.get('/resumes', async (req, res, next) => {
 
 //이력서 상세 조회
 router.get('/resumes/:resumeId', async (req, res, next) => {
-  const { userId } = req.params;
+  const { resumeId } = req.params;
 
   try {
     const resume = await prisma.resumes.findUnique({
-      where: { resumeId: parseInt(userId) },
+      where: { resumeId: parseInt(resumeId) },
       select: {
         resumeId: true,
         title: true,
@@ -115,7 +109,7 @@ router.patch('/resumes/:resumeId', authMiddleware, async (req, res, next) => {
     }
     // 이력서 수정하기
     const updateResume = await prisma.resumes.update({
-      wherte: { resumeId: parseInt(resumeId) },
+      where: { resumeId: parseInt(resumeId) },
       data: {
         title,
         content,
@@ -130,6 +124,7 @@ router.patch('/resumes/:resumeId', authMiddleware, async (req, res, next) => {
 // 이력서 삭제 API
 router.delete('/resumes/:resumeId', authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
+  const { userId } = req.user;
 
   const resume = await prisma.resumes.findById(resumeId).exec();
   if (!resume) {
