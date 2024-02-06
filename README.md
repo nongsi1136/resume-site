@@ -10,7 +10,7 @@
 - https://www.notion.so/nongsi/API-11b02b0921be4b36a9e12e37fb91db55?pvs=4
 
 # ERD URL
-- ERD 작성한 위치 URL 추가
+- https://www.erdcloud.com/d/xiCC4HRjDiwPiyWJp
 
 # 더 고민해 보기
 1. **암호화 방식**
