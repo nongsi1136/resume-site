@@ -2,12 +2,14 @@ import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // 회원가입 API
 router.post('/sign-up', async (req, res, next) => {
-  const { email, password, confirmPassword, name } = req.body;
+  const { email, password, confirmPassword, name, age, gender, profileImage } =
+    req.body;
 
   try {
     // 필수 파라미터 검증하기
@@ -51,6 +53,16 @@ router.post('/sign-up', async (req, res, next) => {
       select: { userId: true, email: true, name: true }, // 비밀번호를 제외한 사용자 정보 반환
     });
 
+    const userInfo = await prisma.userInfos.create({
+      data: {
+        userId: newUser.userId,
+        name,
+        age,
+        gender: gender.toUpperCase(),
+        profileImage,
+      },
+    });
+
     return res.status(200).json({
       userId: newUser.userId,
       email: newUser.email,
@@ -81,10 +93,34 @@ router.post('/sign-in', async (req, res, next) => {
     });
 
     res.cookie('authorization', `Bearer ${token}`);
-    return res.status(200).json({ mesaage: '로그인에 성공하였습니다' });
+    return res.status(200).json({ message: '로그인에 성공하였습니다' });
   } catch (error) {
     next(error);
   }
+});
+
+// 사용자 조회
+router.get('/users', authMiddleware, async (req, res, next) => {
+  const { userId } = req.user;
+
+  const user = await prisma.users.findFirst({
+    where: { userId: +userId },
+    select: {
+      userId: true,
+      email: true,
+      userInfos: {
+        // 1:1 관계를 맺고있는 UserInfos 테이블을 조회하기.
+        select: {
+          name: true,
+          age: true,
+          gender: true,
+          profileImage: true,
+        },
+      },
+    },
+  });
+
+  return res.status(200).json({ data: user });
 });
 
 export default router;
