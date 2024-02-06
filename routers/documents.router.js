@@ -14,7 +14,7 @@ router.post('/resumes', authMiddleware, async (req, res, next) => {
         userId: +userId,
         title: title,
         content: content,
-        status: status,
+        status: 'APPLY',
       },
     });
     return res.status(201).json({ data: resume });
