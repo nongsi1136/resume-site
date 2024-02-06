@@ -126,19 +126,28 @@ router.delete('/resumes/:resumeId', authMiddleware, async (req, res, next) => {
   const { resumeId } = req.params;
   const { userId } = req.user;
 
-  const resume = await prisma.resumes.findById(resumeId).exec();
-  if (!resume) {
-    return res.status(401).json({ message: '이력서 조회에 실패하였습니다.' });
-  }
-  //이력서 삭제 권한
-  if (resume.userId !== parseInt(userId)) {
-    return res
-      .status(401)
-      .json({ message: '해당 이력서를 삭제할 권한이 없습니다' });
-  }
-  await resume.deleteOne({ _id: resumeId }).exec();
+  try {
+    const resume = await prisma.resumes.findUnique({
+      where: { resumeId: parseInt(resumeId) },
+    });
 
-  return res.status(200).json({ message: '이력서 삭제 완료!' });
+    if (!resume) {
+      return res.status(401).json({ message: '이력서 조회에 실패하였습니다.' });
+    }
+    //이력서 삭제 권한
+    if (resume.userId !== parseInt(userId)) {
+      return res
+        .status(401)
+        .json({ message: '해당 이력서를 삭제할 권한이 없습니다' });
+    }
+    await prisma.resumes.delete({
+      where: { resumeId: parseInt(resumeId) },
+    });
+
+    return res.status(200).json({ message: '이력서 삭제 완료!' });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;
