@@ -19,12 +19,11 @@ model Users {
   userInfos UserInfos? 
   Resume Resumes[]
   
-  @@map("Users")
 }
 
 model UserInfos {
   userInfoId   Int      @id @default(autoincrement()) @map("userInfoId")
-  userId       Int      @unique @map("userId") // 사용자(Users) 테이블을 참조하는 외래키
+  userId       Int      @unique @map("userId") 
   name         String   @map("name")
   age          Int?     @map("age")
   gender       String   @map("gender")
