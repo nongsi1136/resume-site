@@ -14,7 +14,7 @@ router.post('/resumes', authMiddleware, async (req, res, next) => {
         userId: +userId,
         title: title,
         content: content,
-        status: 'APPLY',
+        status: { status: 'APPLY' },
       },
     });
     return res.status(201).json({ data: resume });
@@ -34,11 +34,11 @@ router.get('/resumes', async (req, res, next) => {
     'createdAt',
     'status',
   ];
-  const vaildOrderVaules = ['asc', 'desc'];
+  const vaildOrderValues = ['asc', 'desc'];
 
   if (
     !vaildOrderKeys.includes(orderKey) ||
-    !vaildOrderVaules.includes(orderValue)
+    !vaildOrderValues.includes(orderValue)
   ) {
     return res
       .status(400)
